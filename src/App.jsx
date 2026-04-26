@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Cloud, Wind, Fish, TrendingUp, AlertCircle, RefreshCw, MapPin } from 'lucide-react';
 import { zones } from './zones';
+import Map from './Map';
 
 function App() {
   const [selectedRegion, setSelectedRegion] = useState('chesapeake');
@@ -365,7 +366,7 @@ function App() {
             <span style={{ color: '#C2B280' }}>{error}</span>
           </div>
         )}
-
+<Map region={region} zone={selectedZone} reports={reports} />
         {/* Live Reports */}
         {reports.length > 0 && (
           <div style={{ marginBottom: '30px' }}>
