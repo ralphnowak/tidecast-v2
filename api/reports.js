@@ -24,6 +24,8 @@ export default async function handler(req, res) {
       { species: 'Black Sea Bass', location: 'Wreck & Structure', zone: 'lower-bay', date: new Date(Date.now() - 21600000).toISOString(), technique: 'Small jigs, clams', weight: '1-2 lbs', action: 'Good', source: 'Maryland DNR' },
       { species: 'Flounder', location: 'Sandy Bottom Areas', zone: 'lower-bay', date: new Date(Date.now() - 23400000).toISOString(), technique: 'Live minnows, soft plastics', weight: '1-3 lbs', action: 'Good', source: 'Maryland DNR' },
       { species: 'Catfish', location: 'Point Lookout Deep', zone: 'lower-bay', date: new Date(Date.now() - 25200000).toISOString(), technique: 'Cut shad, chicken liver', weight: '5-15 lbs', action: 'Very Good', source: 'Maryland DNR' },
+      { species: 'Striped Bass', location: 'Eastern Shore Channel', zone: 'eastern-shore', date: new Date(Date.now() - 27000000).toISOString(), technique: 'Live herring, deep structure', weight: '18-28 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Black Drum', location: 'Eastern Shore Flats', zone: 'eastern-shore', date: new Date(Date.now() - 28800000).toISOString(), technique: 'Live crabs on bottom', weight: '30-50 lbs', action: 'Very Good', source: 'Maryland DNR' },
     ],
     potomac: [
       { species: 'Smallmouth Bass', location: 'Sycamore Island', zone: 'upper-potomac', date: new Date().toISOString(), technique: 'Tube jigs, crankbaits', weight: '2-4 lbs', action: 'Very Good', source: 'Maryland DNR' },
