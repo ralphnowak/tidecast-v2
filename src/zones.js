@@ -1,18 +1,18 @@
 export const zones = {
   chesapeake: [
-    { id: 'upper-bay', name: 'Upper Bay', coords: [39.2, -76.3] },
-    { id: 'middle-bay', name: 'Middle Bay', coords: [38.8, -76.4] },
-    { id: 'lower-bay', name: 'Lower Bay', coords: [37.5, -76.2] },
-    { id: 'eastern-shore', name: 'Eastern Shore', coords: [38.5, -75.9] },
+    { id: 'upper-bay', name: 'Upper Bay', coords: [39.22, -76.19] },        // Susquehanna Flats open water
+    { id: 'middle-bay', name: 'Middle Bay', coords: [38.72, -76.28] },       // Mid-bay channel, clear of both shores
+    { id: 'lower-bay', name: 'Lower Bay', coords: [37.75, -76.10] },         // Lower Chesapeake open water
+    { id: 'eastern-shore', name: 'Eastern Shore', coords: [38.50, -76.05] }, // Nearshore eastern side, in water
   ],
   potomac: [
-    { id: 'upper-potomac', name: 'Upper Potomac', coords: [39.1, -77.5] },
-    { id: 'middle-potomac', name: 'Middle Potomac', coords: [38.9, -77.3] },
-    { id: 'lower-potomac', name: 'Lower Potomac', coords: [38.3, -76.9] },
+    { id: 'upper-potomac', name: 'Upper Potomac', coords: [39.08, -77.38] }, // River channel near Point of Rocks
+    { id: 'middle-potomac', name: 'Middle Potomac', coords: [38.82, -77.10] }, // River near National Harbor
+    { id: 'lower-potomac', name: 'Lower Potomac', coords: [38.15, -76.70] },  // Wide lower river
   ],
   paxriver: [
-    { id: 'upper-pax', name: 'Upper Patuxent', coords: [39.0, -76.8] },
-    { id: 'middle-pax', name: 'Middle Patuxent', coords: [38.6, -76.7] },
-    { id: 'lower-pax', name: 'Lower Patuxent', coords: [38.3, -76.6] },
+    { id: 'upper-pax', name: 'Upper Patuxent', coords: [38.80, -76.72] },    // Jug Bay / tidal Patuxent head
+    { id: 'middle-pax', name: 'Middle Patuxent', coords: [38.53, -76.67] },  // River channel near Prince Frederick
+    { id: 'lower-pax', name: 'Lower Patuxent', coords: [38.31, -76.52] },    // Near Solomons Island mouth
   ],
 };
