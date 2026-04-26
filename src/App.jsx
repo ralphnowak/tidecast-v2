@@ -48,19 +48,17 @@ function App() {
     const loadData = async () => {
       setLoading(true);
       setError(null);
-      try {
-        const forecastRes = await fetch(`/api/noaa?region=${selectedRegion}`);
-        const forecastData = await forecastRes.json();
-        setForecast(forecastData);
-
-        const reportsRes = await fetch(`/api/reports?region=${selectedRegion}&zone=${selectedZone}`);
-        const reportsData = await reportsRes.json();
-        setReports(reportsData.reports || []);
-      } catch (err) {
-        setError('Failed to load forecast data');
-      } finally {
-        setLoading(false);
+      const [forecastResult, reportsResult] = await Promise.allSettled([
+        fetch(`/api/noaa?region=${selectedRegion}`).then(r => r.json()),
+        fetch(`/api/reports?region=${selectedRegion}&zone=${selectedZone}`).then(r => r.json()),
+      ]);
+      if (forecastResult.status === 'fulfilled') setForecast(forecastResult.value);
+      if (reportsResult.status === 'fulfilled') {
+        setReports(reportsResult.value.reports || []);
+      } else {
+        setError('Failed to load reports');
       }
+      setLoading(false);
     };
     loadData();
   }, [selectedRegion, selectedZone]);
