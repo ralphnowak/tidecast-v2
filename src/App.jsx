@@ -366,7 +366,7 @@ function App() {
             <span style={{ color: '#C2B280' }}>{error}</span>
           </div>
         )}
-<Map region={region} zone={selectedZone} reports={reports} />
+    <Map region={selectedRegion} zone={selectedZone} reports={reports} />
         {/* Live Reports */}
         {reports.length > 0 && (
           <div style={{ marginBottom: '30px' }}>
