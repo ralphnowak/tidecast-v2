@@ -22,6 +22,8 @@ const SEASONAL_PRIORITY_BY_MONTH = {
   11: ['Striped Bass', 'Catfish', 'Yellow Perch', 'Chain Pickerel'],
 };
 
+const PLAYBOOK_LABELS = ['Primary Target', 'Backup Target', 'Fallback Option'];
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
@@ -42,7 +44,7 @@ function scoreWind(windMph) {
 }
 
 function scoreWeather(shortForecast = '') {
-  const text = shortForecast.toLowerCase();
+  const text = String(shortForecast).toLowerCase();
   if (text.includes('thunder') || text.includes('storm')) return 25;
   if (text.includes('rain') || text.includes('showers')) return 55;
   if (text.includes('fog')) return 58;
@@ -80,11 +82,9 @@ function getBestWindow(forecast = []) {
   const scored = forecast.map((period) => {
     const wind = parseWindMph(period.windSpeed);
     const weather = scoreWeather(period.description || period.shortForecast || period.condition);
-    const windScore = scoreWind(wind);
     return {
       ...period,
-      score: Math.round(windScore * 0.55 + weather * 0.45),
-      wind,
+      score: Math.round(scoreWind(wind) * 0.55 + weather * 0.45),
     };
   });
   scored.sort((a, b) => b.score - a.score);
@@ -123,16 +123,32 @@ export function buildFishingIntelligence({ reports = [], forecast, currentZone, 
     .sort((a, b) => b.biteScore - a.biteScore || b.confidence - a.confidence);
 
   const best = rankedReports[0];
-  const topSpecies = [...new Set(rankedReports.slice(0, 5).map((report) => report.species))];
+
+  const speciesMap = new Map();
+  rankedReports.forEach((report) => {
+    if (!speciesMap.has(report.species)) {
+      speciesMap.set(report.species, report);
+    }
+  });
+
+  const playbook = Array.from(speciesMap.values())
+    .slice(0, 3)
+    .map((report, index) => ({
+      label: PLAYBOOK_LABELS[index] || `Option ${index + 1}`,
+      species: report.species,
+      technique: report.technique,
+      biteScore: report.biteScore,
+      confidence: report.confidence,
+      location: report.location,
+    }));
 
   return {
     best,
+    playbook,
     rankedReports,
     biteIndex: best ? (best.biteScore / 10).toFixed(1) : '—',
     confidence: best?.confidence || 0,
     bestWindow,
-    windMph: Math.round(windMph),
-    topSpecies,
     sourceLine: `NOAA forecast + ${reports.length} ${currentZone?.name || currentRegion?.name || 'zone'} reports`,
     rationale: best
       ? [
@@ -150,14 +166,4 @@ export function getFishabilityLabel(score) {
   if (score >= 58) return 'Pick Your Spot';
   if (score >= 42) return 'Tough Conditions';
   return 'Scout Only';
-}
-
-export function getRelativeTime(value) {
-  if (!value) return 'Unknown';
-  const minutes = Math.max(0, Math.round((Date.now() - new Date(value).getTime()) / 60000));
-  if (minutes < 1) return 'Just now';
-  if (minutes < 60) return `${minutes} min ago`;
-  const hours = Math.round(minutes / 60);
-  if (hours < 24) return `${hours} hr ago`;
-  return `${Math.round(hours / 24)} days ago`;
 }
