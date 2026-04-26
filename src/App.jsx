@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Cloud, Wind, Fish, TrendingUp, AlertCircle, RefreshCw, MapPin } from 'lucide-react';
+import { Cloud, Fish, TrendingUp, AlertCircle, RefreshCw, MapPin } from 'lucide-react';
 import { zones } from './zones';
 import Map from './Map';
+import { buildFishingIntelligence, getFishabilityLabel } from './intelligence';
 
 function App() {
   const [selectedRegion, setSelectedRegion] = useState('chesapeake');
@@ -13,24 +14,11 @@ function App() {
   const [visibleSpecies, setVisibleSpecies] = useState(new Set());
 
   const regions = {
-    chesapeake: {
-      name: 'Chesapeake Bay',
-      coords: [37.2707, -76.0633],
-      primarySpecies: ['Striped Bass', 'Largemouth Bass', 'Bluefish'],
-    },
-    potomac: {
-      name: 'Potomac River',
-      coords: [38.6034, -77.0364],
-      primarySpecies: ['Smallmouth Bass', 'Striped Bass', 'Channel Catfish'],
-    },
-    paxriver: {
-      name: 'Patuxent River',
-      coords: [38.3749, -76.6259],
-      primarySpecies: ['Largemouth Bass', 'Catfish', 'Bluegill'],
-    },
+    chesapeake: { name: 'Chesapeake Bay' },
+    potomac: { name: 'Potomac River' },
+    paxriver: { name: 'Patuxent River' },
   };
 
-  // Reset zone when region changes
   useEffect(() => {
     setSelectedZone(zones[selectedRegion][0].id);
   }, [selectedRegion]);
@@ -39,400 +27,82 @@ function App() {
     const loadData = async () => {
       setLoading(true);
       setError(null);
-
       try {
-        // Fetch forecast
         const forecastRes = await fetch(`/api/noaa?region=${selectedRegion}`);
         const forecastData = await forecastRes.json();
-        if (!forecastRes.ok || !forecastData.conditions) {
-          throw new Error(forecastData.error || 'Invalid forecast response');
-        }
         setForecast(forecastData);
 
-        // Fetch reports filtered by zone
         const reportsRes = await fetch(`/api/reports?region=${selectedRegion}&zone=${selectedZone}`);
         const reportsData = await reportsRes.json();
         setReports(reportsData.reports || []);
       } catch (err) {
-        console.error('Error loading data:', err);
         setError('Failed to load forecast data');
       } finally {
         setLoading(false);
       }
     };
-
     loadData();
   }, [selectedRegion, selectedZone]);
 
   const currentRegion = regions[selectedRegion];
   const currentZones = zones[selectedRegion];
   const currentZone = currentZones.find(z => z.id === selectedZone);
+  const intel = buildFishingIntelligence({ reports, forecast, currentZone, currentRegion });
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0a2342 0%, #1a4d6d 50%, #2a6b8d 100%)',
-      color: '#f5f5f5',
-      fontFamily: '"Courier Prime", monospace',
-      padding: '20px',
-    }}>
-      <div style={{
-        maxWidth: '1400px',
-        margin: '0 auto',
-        marginBottom: '40px',
-      }}>
-        {/* Header */}
-        <div style={{
-          borderBottom: '3px solid #4B5320',
-          paddingBottom: '20px',
-          marginBottom: '30px',
-        }}>
-          <h1 style={{
-            fontSize: '2.5rem',
-            margin: '0 0 8px 0',
-            fontWeight: 'bold',
-            letterSpacing: '2px',
-            color: '#C2B280',
-          }}>
-            TIDECAST v2
-          </h1>
-          <p style={{
-            margin: '0',
-            fontSize: '0.95rem',
-            color: '#a0b0c0',
-            letterSpacing: '1px',
-            textTransform: 'uppercase',
-          }}>
-            Zone-Based Fishing Intelligence
-          </p>
-        </div>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a2342 0%, #1a4d6d 50%, #2a6b8d 100%)', color: '#f5f5f5', fontFamily: '"Courier Prime", monospace', padding: 20 }}>
+      <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        <h1 style={{ color: '#C2B280', letterSpacing: 2 }}>TIDECAST v2</h1>
+        <p style={{ color: '#a0b0c0', textTransform: 'uppercase' }}>Zone-Based Fishing Intelligence</p>
 
-        {/* Region Selector */}
-        <div style={{
-          display: 'flex',
-          gap: '12px',
-          marginBottom: '30px',
-          flexWrap: 'wrap',
-        }}>
+        <div style={{ marginBottom: 24 }}>
           {Object.entries(regions).map(([key, region]) => (
-            <button
-              key={key}
-              onClick={() => setSelectedRegion(key)}
-              style={{
-                padding: '12px 24px',
-                border: selectedRegion === key ? '2px solid #C2B280' : '2px solid #4B5320',
-                background: selectedRegion === key ? '#4B5320' : 'transparent',
-                color: selectedRegion === key ? '#C2B280' : '#a0b0c0',
-                cursor: 'pointer',
-                fontSize: '0.95rem',
-                fontFamily: '"Courier Prime", monospace',
-                fontWeight: 'bold',
-                letterSpacing: '1px',
-                transition: 'all 0.3s ease',
-                textTransform: 'uppercase',
-              }}
-            >
+            <button key={key} onClick={() => setSelectedRegion(key)} style={{ marginRight: 10, padding: '10px 18px', background: selectedRegion === key ? '#4B5320' : 'transparent', color: '#C2B280', border: '1px solid #4B5320' }}>
               {region.name}
             </button>
           ))}
         </div>
 
-        {/* Zone Selector */}
-        <div style={{
-          marginBottom: '30px',
-          padding: '20px',
-          background: 'rgba(10, 35, 66, 0.5)',
-          border: '1px solid #4B5320',
-          borderRadius: '8px',
-        }}>
-          <h2 style={{
-            margin: '0 0 15px 0',
-            fontSize: '1.1rem',
-            color: '#C2B280',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}>
-            <MapPin size={20} /> Select Zone
-          </h2>
-          <div style={{
-            display: 'flex',
-            gap: '10px',
-            flexWrap: 'wrap',
-          }}>
-            {currentZones.map(zone => (
-              <button
-                key={zone.id}
-                onClick={() => setSelectedZone(zone.id)}
-                style={{
-                  padding: '10px 16px',
-                  border: selectedZone === zone.id ? '2px solid #C2B280' : '1px solid #7a8a9a',
-                  background: selectedZone === zone.id ? 'rgba(194, 178, 128, 0.2)' : 'transparent',
-                  color: selectedZone === zone.id ? '#C2B280' : '#a0b0c0',
-                  cursor: 'pointer',
-                  fontSize: '0.85rem',
-                  fontFamily: '"Courier Prime", monospace',
-                  borderRadius: '4px',
-                  transition: 'all 0.2s ease',
-                  textTransform: 'capitalize',
-                }}
-              >
-                {zone.name}
-              </button>
-            ))}
-          </div>
+        <div style={{ marginBottom: 24 }}>
+          {currentZones.map(zone => (
+            <button key={zone.id} onClick={() => setSelectedZone(zone.id)} style={{ marginRight: 8, marginBottom: 8, padding: '8px 14px', background: selectedZone === zone.id ? 'rgba(194,178,128,.2)' : 'transparent', color: '#C2B280', border: '1px solid #4B5320' }}>
+              {zone.name}
+            </button>
+          ))}
         </div>
 
-        {/* Zone Info */}
-        {currentZone && (
-          <div style={{
-            marginBottom: '30px',
-            padding: '20px',
-            background: 'rgba(10, 35, 66, 0.5)',
-            border: '1px solid #4B5320',
-            borderRadius: '8px',
-          }}>
-            <h3 style={{
-              margin: '0 0 12px 0',
-              fontSize: '1.2rem',
-              color: '#C2B280',
-              fontWeight: 'bold',
-            }}>
-              {currentZone.name} • {currentRegion.name}
-            </h3>
-            <p style={{
-              margin: '0',
-              fontSize: '0.9rem',
-              color: '#a0b0c0',
-            }}>
-              Coordinates: {currentZone.coords[0].toFixed(2)}°N, {Math.abs(currentZone.coords[1]).toFixed(2)}°W
-            </p>
+        {!loading && intel?.best && (
+          <div style={{ marginBottom: 30, padding: 24, background: 'rgba(10,35,66,.75)', border: '2px solid #C2B280', borderRadius: 8 }}>
+            <div style={{ color: '#C2B280', fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 12 }}>
+              Today's Recommendation
+            </div>
+            <h2 style={{ margin: 0, fontSize: '2rem' }}>{intel.best.species}</h2>
+            <p style={{ color: '#a0b0c0' }}>{currentZone?.name} • {currentRegion?.name}</p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 14, marginTop: 18 }}>
+              <div><strong>Bite Index:</strong><br />{intel.biteIndex}/10 ({getFishabilityLabel(intel.best.biteScore)})</div>
+              <div><strong>Best Window:</strong><br />{intel.bestWindow}</div>
+              <div><strong>Technique:</strong><br />{intel.best.technique}</div>
+              <div><strong>Confidence:</strong><br />{intel.confidence}%</div>
+            </div>
+
+            <div style={{ marginTop: 18, color: '#a0b0c0' }}>
+              {intel.rationale.map((line, i) => <div key={i}>• {line}</div>)}
+            </div>
           </div>
         )}
 
-        {/* Forecast Section */}
-        {loading ? (
-          <div style={{
-            textAlign: 'center',
-            padding: '60px 20px',
-          }}>
-            <RefreshCw size={48} style={{
-              animation: 'spin 2s linear infinite',
-              marginBottom: '20px',
-              color: '#C2B280',
-            }} />
-            <p style={{
-              fontSize: '1.1rem',
-              color: '#a0b0c0',
-              letterSpacing: '1px',
-            }}>
-              LOADING FORECAST DATA
-            </p>
-            <style>{`
-              @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-              }
-            `}</style>
-          </div>
-        ) : forecast ? (
-          <>
-            {/* Current Conditions */}
-            <div style={{
-              marginBottom: '30px',
-              padding: '24px',
-              background: 'rgba(10, 35, 66, 0.6)',
-              border: '1px solid #4B5320',
-              borderRadius: '8px',
-            }}>
-              <h3 style={{
-                margin: '0 0 20px 0',
-                fontSize: '1.2rem',
-                color: '#C2B280',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-              }}>
-                <Cloud size={24} /> Current Conditions
-              </h3>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '20px',
-              }}>
-                {[
-                  { label: 'Temperature', value: `${forecast?.conditions?.temperature}°F`, icon: '🌡️' },
-                  { label: 'Wind', value: forecast?.conditions?.windSpeed || 'N/A', icon: '💨' },
-                  { label: 'Direction', value: forecast?.conditions?.windDirection || 'N/A', icon: '↗️' },
-                  { label: 'Summary', value: forecast?.conditions?.shortForecast || 'Fair', icon: '⛅' },
-                ].map((item, idx) => (
-                  <div key={idx} style={{
-                    padding: '12px',
-                    background: 'rgba(75, 83, 32, 0.3)',
-                    border: '1px solid #4B5320',
-                    borderRadius: '4px',
-                  }}>
-                    <div style={{ fontSize: '1.3rem', marginBottom: '4px' }}>{item.icon}</div>
-                    <div style={{
-                      fontSize: '0.85rem',
-                      color: '#a0b0c0',
-                      marginBottom: '6px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
-                    }}>
-                      {item.label}
-                    </div>
-                    <div style={{
-                      fontSize: '1.1rem',
-                      color: '#C2B280',
-                      fontWeight: 'bold',
-                    }}>
-                      {item.value}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <Map region={selectedRegion} zone={selectedZone} reports={reports} visibleSpecies={visibleSpecies} setVisibleSpecies={setVisibleSpecies} />
 
-            {/* Forecast Windows */}
-            <div style={{
-              marginBottom: '30px',
-            }}>
-              <h3 style={{
-                margin: '0 0 20px 0',
-                fontSize: '1.2rem',
-                color: '#C2B280',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-              }}>
-                <TrendingUp size={24} /> Forecast Windows
-              </h3>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '16px',
-              }}>
-                {forecast?.forecast?.slice(0, 4).map((window, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      padding: '20px',
-                      background: 'rgba(10, 35, 66, 0.6)',
-                      border: '1px solid #4B5320',
-                      borderRadius: '8px',
-                    }}
-                  >
-                    <div style={{
-                      fontSize: '1rem',
-                      color: '#C2B280',
-                      fontWeight: 'bold',
-                      marginBottom: '8px',
-                      letterSpacing: '0.5px',
-                    }}>
-                      {window.time}
-                    </div>
-                    <p style={{
-                      margin: '8px 0',
-                      fontSize: '0.9rem',
-                      color: '#a0b0c0',
-                      lineHeight: '1.4',
-                    }}>
-                      {window.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
+        <div style={{ marginTop: 24 }}>
+          <h3 style={{ color: '#C2B280' }}>Live Reports</h3>
+          {reports.map((report, idx) => (
+            <div key={idx} style={{ padding: 14, marginBottom: 10, background: 'rgba(10,35,66,.6)', borderLeft: '4px solid #C2B280' }}>
+              <strong>{report.species}</strong> — {report.location}<br />
+              Technique: {report.technique} | Action: {report.action}
             </div>
-          </>
-        ) : error && (
-          <div style={{
-            padding: '40px 20px',
-            background: 'rgba(194, 178, 128, 0.1)',
-            border: '1px solid #4B5320',
-            borderRadius: '8px',
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-          }}>
-            <AlertCircle size={24} color="#C2B280" />
-            <span style={{ color: '#C2B280' }}>{error}</span>
-          </div>
-        )}
-            <Map region={selectedRegion} zone={selectedZone} reports={reports} visibleSpecies={visibleSpecies} setVisibleSpecies={setVisibleSpecies} />
-        {/* Live Reports */}
-        {reports.length > 0 && (
-          <div style={{ marginBottom: '30px' }}>
-            <h3 style={{
-              margin: '0 0 20px 0',
-              fontSize: '1.2rem',
-              color: '#C2B280',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-            }}>
-              <Fish size={24} /> Live Reports for {currentZone?.name}
-            </h3>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '16px',
-            }}>
-              {reports.map((report, idx) => (
-                <div key={idx} style={{
-                  padding: '16px',
-                  background: 'rgba(10, 35, 66, 0.6)',
-                  border: '1px solid #4B5320',
-                  borderRadius: '8px',
-                  borderLeft: '4px solid #C2B280',
-                }}>
-                  <div style={{
-                    fontSize: '1rem',
-                    color: '#C2B280',
-                    fontWeight: 'bold',
-                    marginBottom: '4px',
-                  }}>
-                    {report.species}
-                  </div>
-                  <div style={{
-                    fontSize: '0.85rem',
-                    color: '#a0b0c0',
-                    marginBottom: '8px',
-                  }}>
-                    {report.location} • {report.zone}
-                  </div>
-                  <div style={{
-                    fontSize: '0.8rem',
-                    color: '#a0b0c0',
-                    marginBottom: '8px',
-                    lineHeight: '1.4',
-                  }}>
-                    <strong>Technique:</strong> {report.technique}
-                  </div>
-                  {report.weight && (
-                    <div style={{
-                      fontSize: '0.8rem',
-                      color: '#a0b0c0',
-                      marginBottom: '8px',
-                    }}>
-                      <strong>Size:</strong> {report.weight}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );
