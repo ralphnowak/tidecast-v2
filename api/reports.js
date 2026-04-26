@@ -1,60 +1,18 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
   
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
   const { region, zone } = req.query;
 
   if (!region) {
     return res.status(400).json({ error: 'Invalid region' });
   }
 
-  try {
-    // Fetch from DNR API endpoint
-    const dnrUrl = `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers.host}/api/dnr?region=${region}`;
-    const dnrRes = await fetch(dnrUrl);
-    const dnrData = await dnrRes.json();
-
-    // Get reports (either from DNR scraping or fallback)
-    let reports = dnrData.reports || [];
-
-    // If we got fallback reports, enhance with zone-specific mock data
-    if (dnrData.note) {
-      reports = getEnhancedReports(region, zone);
-    }
-
-    // Filter by zone if specified
-    if (zone) {
-      reports = reports.filter(r => r.zone === zone);
-    }
-
-    reports.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    return res.status(200).json({
-      region,
-      zone: zone || 'all',
-      reports: reports,
-      total: reports.length,
-      source: dnrData.source,
-      fetchedAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error('Reports fetch error:', error);
-    return res.status(500).json({ error: error.message });
-  }
-}
-
-function getEnhancedReports(region, zone) {
   const reports = {
     chesapeake: [
       {
         species: 'Striped Bass',
         location: 'Upper Chesapeake Bay',
-        zone: 'Upper Bay',
+        zone: 'upper-bay',
         date: new Date().toISOString(),
         technique: 'Live herring, deep structure',
         weight: '18-28 lbs',
@@ -64,7 +22,7 @@ function getEnhancedReports(region, zone) {
       {
         species: 'Largemouth Bass',
         location: 'Eastern Bay',
-        zone: 'Middle Bay',
+        zone: 'middle-bay',
         date: new Date(Date.now() - 3600000).toISOString(),
         technique: 'Crankbaits, shallow grass',
         weight: '3-5 lbs',
@@ -74,7 +32,7 @@ function getEnhancedReports(region, zone) {
       {
         species: 'Bluefish',
         location: 'Lower Bay',
-        zone: 'Lower Bay',
+        zone: 'lower-bay',
         date: new Date(Date.now() - 7200000).toISOString(),
         technique: 'Metal shad lures',
         weight: '6-10 lbs',
@@ -86,7 +44,7 @@ function getEnhancedReports(region, zone) {
       {
         species: 'Smallmouth Bass',
         location: 'Sycamore Island',
-        zone: 'Upper Potomac',
+        zone: 'upper-potomac',
         date: new Date().toISOString(),
         technique: 'Tube jigs on structure',
         weight: '2-4 lbs',
@@ -96,7 +54,7 @@ function getEnhancedReports(region, zone) {
       {
         species: 'Striped Bass',
         location: 'Monitor Run',
-        zone: 'Middle Potomac',
+        zone: 'middle-potomac',
         date: new Date().toISOString(),
         technique: 'Live herring in current',
         weight: '16-22 lbs',
@@ -106,7 +64,7 @@ function getEnhancedReports(region, zone) {
       {
         species: 'Striped Bass',
         location: 'Occoquan',
-        zone: 'Lower Potomac',
+        zone: 'lower-potomac',
         date: new Date().toISOString(),
         technique: 'Topwater plugs at dawn',
         weight: '14-20 lbs',
@@ -118,7 +76,7 @@ function getEnhancedReports(region, zone) {
       {
         species: 'Largemouth Bass',
         location: 'Hunting Creek',
-        zone: 'Upper Patuxent',
+        zone: 'upper-pax',
         date: new Date().toISOString(),
         technique: 'Soft plastics in vegetation',
         weight: '3-5 lbs',
@@ -128,7 +86,7 @@ function getEnhancedReports(region, zone) {
       {
         species: 'Channel Catfish',
         location: 'Jug Bay',
-        zone: 'Middle Patuxent',
+        zone: 'middle-pax',
         date: new Date().toISOString(),
         technique: 'Cut shad at dusk',
         weight: '15-25 lbs',
@@ -138,7 +96,7 @@ function getEnhancedReports(region, zone) {
       {
         species: 'Largemouth Bass',
         location: 'Benedict area',
-        zone: 'Lower Patuxent',
+        zone: 'lower-pax',
         date: new Date().toISOString(),
         technique: 'Soft plastics in weeds',
         weight: '3-5 lbs',
@@ -148,5 +106,25 @@ function getEnhancedReports(region, zone) {
     ],
   };
 
-  return reports[region] || [];
+  try {
+    let regionReports = reports[region] || [];
+
+    // Filter by zone if specified
+    if (zone) {
+      regionReports = regionReports.filter(r => r.zone === zone);
+    }
+
+    regionReports.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    return res.status(200).json({
+      region,
+      zone: zone || 'all',
+      reports: regionReports,
+      total: regionReports.length,
+      source: 'Maryland Department of Natural Resources',
+      fetchedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 }
