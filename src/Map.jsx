@@ -6,8 +6,7 @@ export default function Map({ region, zone, reports, visibleSpecies, setVisibleS
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
-  const [visibleSpecies, setVisibleSpecies] = useState(new Set());
-
+  // Get unique species from reports
   // Get unique species from reports
   const allSpecies = [...new Set(reports.map(r => r.species))];
 
