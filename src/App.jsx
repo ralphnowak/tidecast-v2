@@ -120,6 +120,32 @@ function App() {
                 </div>
               </div>
             )}
+
+            {intel.primeWindows && (
+              <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(194,178,128,.35)' }}>
+                <div style={{ color: '#C2B280', fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 14 }}>
+                  Prime Bite Windows
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 14 }}>
+                  <div style={{ padding: 14, background: 'rgba(10,35,66,.55)', border: '1px solid rgba(194,178,128,.45)', borderRadius: 6 }}>
+                    <div style={{ color: '#C2B280', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Primary Window</div>
+                    <div style={{ fontSize: 22, fontWeight: 'bold', marginTop: 6 }}>{intel.primeWindows.primary}</div>
+                  </div>
+                  <div style={{ padding: 14, background: 'rgba(10,35,66,.55)', border: '1px solid rgba(194,178,128,.45)', borderRadius: 6 }}>
+                    <div style={{ color: '#C2B280', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Secondary Window</div>
+                    <div style={{ fontSize: 22, fontWeight: 'bold', marginTop: 6 }}>{intel.primeWindows.secondary}</div>
+                  </div>
+                  <div style={{ padding: 14, background: 'rgba(10,35,66,.55)', border: '1px solid rgba(194,178,128,.45)', borderRadius: 6 }}>
+                    <div style={{ color: '#C2B280', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Moon Phase</div>
+                    <div style={{ fontSize: 22, fontWeight: 'bold', marginTop: 6 }}>{intel.primeWindows.moonPhase}</div>
+                  </div>
+                </div>
+                <div style={{ marginTop: 14, color: '#a0b0c0', lineHeight: 1.5 }}>
+                  <div>• <strong>Tide Signal:</strong> {intel.primeWindows.tideNote}</div>
+                  <div>• <strong>Migration Signal:</strong> {intel.primeWindows.migrationNote}</div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
