@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Cloud, Fish, TrendingUp, AlertCircle, RefreshCw, MapPin } from 'lucide-react';
 import { zones } from './zones';
 import Map from './Map';
 import { buildFishingIntelligence, getFishabilityLabel } from './intelligence';
+
+function ConfidenceBar({ value }) {
+  return (
+    <div style={{ marginTop: 8 }}>
+      <div style={{ height: 8, width: '100%', background: 'rgba(160,176,192,.25)', borderRadius: 999, overflow: 'hidden' }}>
+        <div style={{ height: '100%', width: `${value}%`, background: '#C2B280', borderRadius: 999 }} />
+      </div>
+    </div>
+  );
+}
 
 function App() {
   const [selectedRegion, setSelectedRegion] = useState('chesapeake');
@@ -71,6 +80,8 @@ function App() {
           ))}
         </div>
 
+        {error && <div style={{ color: '#C2B280', marginBottom: 16 }}>{error}</div>}
+
         {!loading && intel?.best && (
           <div style={{ marginBottom: 30, padding: 24, background: 'rgba(10,35,66,.75)', border: '2px solid #C2B280', borderRadius: 8 }}>
             <div style={{ color: '#C2B280', fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 12 }}>
@@ -83,12 +94,32 @@ function App() {
               <div><strong>Bite Index:</strong><br />{intel.biteIndex}/10 ({getFishabilityLabel(intel.best.biteScore)})</div>
               <div><strong>Best Window:</strong><br />{intel.bestWindow}</div>
               <div><strong>Technique:</strong><br />{intel.best.technique}</div>
-              <div><strong>Confidence:</strong><br />{intel.confidence}%</div>
+              <div><strong>Confidence:</strong><br />{intel.confidence}%<ConfidenceBar value={intel.confidence} /></div>
             </div>
 
             <div style={{ marginTop: 18, color: '#a0b0c0' }}>
               {intel.rationale.map((line, i) => <div key={i}>• {line}</div>)}
             </div>
+
+            {intel.playbook?.length > 0 && (
+              <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid rgba(194,178,128,.35)' }}>
+                <div style={{ color: '#C2B280', fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 14 }}>
+                  Today's Playbook
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(230px,1fr))', gap: 14 }}>
+                  {intel.playbook.map((item) => (
+                    <div key={`${item.label}-${item.species}`} style={{ padding: 14, background: 'rgba(75,83,32,.22)', border: '1px solid rgba(194,178,128,.45)', borderRadius: 6 }}>
+                      <div style={{ color: '#C2B280', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>{item.label}</div>
+                      <div style={{ fontSize: 20, fontWeight: 'bold', marginTop: 6 }}>{item.species}</div>
+                      <div style={{ color: '#a0b0c0', marginTop: 6 }}>{item.location}</div>
+                      <div style={{ marginTop: 10 }}><strong>Pattern:</strong> {item.technique}</div>
+                      <div style={{ marginTop: 10 }}><strong>Bite:</strong> {(item.biteScore / 10).toFixed(1)}/10 • {getFishabilityLabel(item.biteScore)}</div>
+                      <div style={{ marginTop: 10 }}><strong>Confidence:</strong> {item.confidence}%<ConfidenceBar value={item.confidence} /></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
