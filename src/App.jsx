@@ -10,6 +10,7 @@ function App() {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [visibleSpecies, setVisibleSpecies] = useState(new Set());
 
   const regions = {
     chesapeake: {
@@ -366,7 +367,7 @@ function App() {
             <span style={{ color: '#C2B280' }}>{error}</span>
           </div>
         )}
-    <Map region={selectedRegion} zone={selectedZone} reports={reports} />
+            <Map region={selectedRegion} zone={selectedZone} reports={reports} visibleSpecies={visibleSpecies} setVisibleSpecies={setVisibleSpecies} />
         {/* Live Reports */}
         {reports.length > 0 && (
           <div style={{ marginBottom: '30px' }}>
