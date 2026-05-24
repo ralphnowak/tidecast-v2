@@ -26,15 +26,16 @@ function getSource(report) {
 }
 
 function getReportAge(date) {
-  if (!date) return { label: 'Recent', age: 'Recently' };
+  if (!date) return { label: 'Recent', age: 'Recently', icon: '[recent]' };
   const hours = Math.max(0, (Date.now() - new Date(date).getTime()) / 36e5);
-  if (hours < 1) return { label: 'Just Updated', age: 'Less than 1 hr ago' };
-  if (hours < 24) return { label: 'Updated Today', age: `${Math.round(hours)} hrs ago` };
+  if (hours < 1) return { label: 'Just Updated', age: 'Less than 1 hr ago', icon: '🔥' };
+  if (hours < 12) return { label: 'Fresh', age: `${Math.round(hours)} hrs ago`, icon: '🔥' };
+  if (hours < 24) return { label: 'Updated Today', age: `${Math.round(hours)} hrs ago`, icon: '[today]' };
 
   const days = Math.round(hours / 24);
-  if (days === 1) return { label: 'Recent', age: '1 day ago' };
-  if (days <= 7) return { label: 'This Week', age: `${days} days ago` };
-  return { label: 'Reference Report', age: `${days} days ago` };
+  if (days === 1) return { label: 'Recent', age: '1 day ago', icon: '[recent]' };
+  if (days <= 7) return { label: 'This Week', age: `${days} days ago`, icon: '[week]' };
+  return { label: 'Reference Report', age: `${days} days ago`, icon: '[ref]' };
 }
 
 function App() {
@@ -176,7 +177,7 @@ function App() {
         <Map region={selectedRegion} zone={selectedZone} reports={reports} visibleSpecies={visibleSpecies} setVisibleSpecies={setVisibleSpecies} />
 
         <div style={{ marginTop: 24 }}>
-          <h3 style={{ color: '#C2B280' }}>Live Reports</h3>
+          <h3 style={{ color: '#C2B280' }}>Regional Reports</h3>
           {reports.map((report, idx) => {
             const freshness = getReportAge(report.date);
             const source = getSource(report);
@@ -188,7 +189,7 @@ function App() {
                 <div style={{ marginTop: 8, color: '#a0b0c0', display: 'flex', flexWrap: 'wrap', gap: 18 }}>
                   <div><strong>Source:</strong> {source}</div>
                   <div><strong>Posted:</strong> {freshness.age}</div>
-                  <div><strong>Status:</strong> {freshness.label}</div>
+                  <div><strong>Status:</strong> {freshness.icon} {freshness.label}</div>
                 </div>
                 <div style={{ marginTop: 10 }}><strong>Technique:</strong> {report.technique}</div>
                 <div style={{ marginTop: 6 }}><strong>Action:</strong> {report.action}</div>
