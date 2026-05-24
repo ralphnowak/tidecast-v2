@@ -88,29 +88,29 @@ export default async function handler(req, res) {
 
     paxriver: [
       // UPPER PATUXENT - Freshwater
-      { species: 'Largemouth Bass', location: 'Hunting Creek', zone: 'upper-pax', date: new Date().toISOString(), technique: 'Soft plastics, topwater', weight: '3-6 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Snakehead', location: 'Upper Patuxent Ponds', zone: 'upper-pax', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Topwater, live shiners', weight: '2-5 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Chain Pickerel', location: 'Upper Patuxent Weeds', zone: 'upper-pax', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Small spinnerbaits', weight: '1-2 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Bluegill', location: 'Upper Patuxent', zone: 'upper-pax', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Crickets, worms', weight: '0.5-1 lb', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Crappie', location: 'Upper Patuxent Coves', zone: 'upper-pax', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Small jigs', weight: '0.5-1.5 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Largemouth Bass', location: 'Wootons Landing Park', zone: 'upper-pax', date: new Date().toISOString(), technique: 'Soft plastics, topwater', weight: '3-6 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Snakehead', location: 'Waysons Corner', zone: 'upper-pax', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Topwater, live shiners', weight: '2-5 lbs', action: 'Excellent', source: 'FishTalk Magazine' },
+      { species: 'Channel Catfish', location: 'Kings Landing Park', zone: 'upper-pax', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Fresh bunker chunks', weight: '8-20 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'White Perch', location: 'Lower Marlboro', zone: 'upper-pax', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Bloodworms, small jigs', weight: '0.5-1.5 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Yellow Perch', location: 'Jug Bay', zone: 'upper-pax', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Small jigs, minnows', weight: '1-2 lbs', action: 'Good', source: 'FishTalk Magazine' },
 
       // MIDDLE PATUXENT - Mixed
-      { species: 'Channel Catfish', location: 'Jug Bay', zone: 'middle-pax', date: new Date().toISOString(), technique: 'Cut shad at dusk', weight: '15-30 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Largemouth Bass', location: 'Jug Bay Marsh', zone: 'middle-pax', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Topwater, soft plastics', weight: '4-7 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Snakehead', location: 'Jug Bay Flats', zone: 'middle-pax', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Topwater, live frogs', weight: '2-6 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Crappie', location: 'Middle Patuxent', zone: 'middle-pax', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Small jigs, minnows', weight: '0.5-1.5 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Flathead Catfish', location: 'Middle Patuxent Deep', zone: 'middle-pax', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Live shad at night', weight: '25-60 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Striped Bass', location: 'Middle Patuxent Channel', zone: 'middle-pax', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Live herring', weight: '16-26 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'White Perch', location: 'Middle Patuxent Spawning', zone: 'middle-pax', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small jigs', weight: '0.5-1.5 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Channel Catfish', location: 'Sheridan Point', zone: 'middle-pax', date: new Date().toISOString(), technique: 'Cut shad at dusk', weight: '15-30 lbs', action: 'Excellent', source: 'FishTalk Magazine' },
+      { species: 'White Perch', location: "Nan's Cove", zone: 'middle-pax', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Beetle spins, small jigs', weight: '0.5-1.5 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'Largemouth Bass', location: 'Broomes Island', zone: 'middle-pax', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Topwater, soft plastics', weight: '4-7 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'Striped Bass', location: 'Mill Creek', zone: 'middle-pax', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Paddle tails around riprap', weight: '16-26 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Speckled Sea Trout', location: 'Solomons Island', zone: 'middle-pax', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Paddle tail jigs', weight: '1-3 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Bluefish', location: 'Solomons Island', zone: 'middle-pax', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Small spoons near bridge', weight: '1-4 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Spanish Mackerel', location: 'Solomons Island', zone: 'middle-pax', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small spoons north of bridge', weight: '1-3 lbs', action: 'Good', source: 'FishTalk Magazine' },
 
       // LOWER PATUXENT - Brackish
-      { species: 'Largemouth Bass', location: 'Benedict Area', zone: 'lower-pax', date: new Date().toISOString(), technique: 'Soft plastics in weeds', weight: '3-6 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Striped Bass', location: 'Lower Patuxent', zone: 'lower-pax', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Live herring, topwater', weight: '15-28 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Black Drum', location: 'Cedar Point', zone: 'lower-pax', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Live crabs', weight: '30-50 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Snakehead', location: 'Lower Patuxent Backwater', zone: 'lower-pax', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Topwater, live mullet', weight: '2-5 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Catfish', location: 'Lower Patuxent Deep', zone: 'lower-pax', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Chicken liver, cut shad', weight: '8-20 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Cobia', location: 'Lower Patuxent Open', zone: 'lower-pax', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Live mullet', weight: '20-40 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Spanish Mackerel', location: 'Lower Patuxent Channel', zone: 'lower-pax', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small spoons', weight: '1-3 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Striped Bass', location: 'Carroll Muds', zone: 'lower-pax', date: new Date().toISOString(), technique: 'Jigging rugged bottom', weight: '15-28 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Black Drum', location: 'Barge Columbia Wreck', zone: 'lower-pax', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Live crabs near wreck', weight: '30-50 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'Flounder', location: 'Drum Point Wreck', zone: 'lower-pax', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Minnows along scour', weight: '1-3 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Cobia', location: 'Fishing Point Obstruction', zone: 'lower-pax', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Live bait around structure', weight: '20-40 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Sheepshead', location: 'Thomas Johnson Bridge Target', zone: 'lower-pax', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Crabs on concrete target', weight: '2-6 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Catfish', location: 'S-49 Wreck', zone: 'lower-pax', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Cut bait near deep wreck', weight: '8-20 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Spanish Mackerel', location: 'Cuckold Creek Obstructions', zone: 'lower-pax', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small spoons around moving water', weight: '1-3 lbs', action: 'Good', source: 'FishTalk Magazine' },
     ],
   };
 
