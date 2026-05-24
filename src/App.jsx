@@ -25,6 +25,10 @@ function getSource(report) {
   return report.source || report.provider || report.origin || 'Regional Report';
 }
 
+function getSignalLabel(report) {
+  return report.signalLabel || (report.isReference ? 'Reference Spot' : 'Recent Report');
+}
+
 function getReportAge(date) {
   if (!date) return { label: 'Recent', age: 'Recently', icon: '[recent]' };
   const hours = Math.max(0, (Date.now() - new Date(date).getTime()) / 36e5);
@@ -110,7 +114,7 @@ function App() {
         {!loading && intel?.best && (
           <div style={{ marginBottom: 30, padding: 24, background: 'rgba(10,35,66,.75)', border: '2px solid #C2B280', borderRadius: 8 }}>
             <div style={{ color: '#C2B280', fontSize: 14, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 12 }}>
-              Today's Recommendation
+              Forecast-Based Pick
             </div>
             <h2 style={{ margin: 0, fontSize: '2rem' }}>{intel.best.species}</h2>
             <p style={{ color: '#a0b0c0' }}>{currentZone?.name} • {currentRegion?.name}</p>
@@ -137,6 +141,7 @@ function App() {
                       <div style={{ color: '#C2B280', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>{item.label}</div>
                       <div style={{ fontSize: 20, fontWeight: 'bold', marginTop: 6 }}>{item.species}</div>
                       <div style={{ color: '#a0b0c0', marginTop: 6 }}>{item.location}</div>
+                      <div style={{ color: '#C2B280', marginTop: 6, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>{item.signalLabel}</div>
                       <div style={{ marginTop: 10 }}><strong>Pattern:</strong> {item.technique}</div>
                       <div style={{ marginTop: 10 }}><strong>Bite:</strong> {(item.biteScore / 10).toFixed(1)}/10 • {getFishabilityLabel(item.biteScore)}</div>
                       <div style={{ marginTop: 10 }}><strong>Confidence:</strong> {item.confidence}%<ConfidenceBar value={item.confidence} /></div>
@@ -177,10 +182,11 @@ function App() {
         <Map region={selectedRegion} zone={selectedZone} reports={reports} visibleSpecies={visibleSpecies} setVisibleSpecies={setVisibleSpecies} />
 
         <div style={{ marginTop: 24 }}>
-          <h3 style={{ color: '#C2B280' }}>Regional Reports</h3>
+          <h3 style={{ color: '#C2B280' }}>Spot & Report Signals</h3>
           {reports.map((report, idx) => {
             const freshness = getReportAge(report.date);
             const source = getSource(report);
+            const signalLabel = getSignalLabel(report);
             return (
               <div key={idx} style={{ padding: 16, marginBottom: 12, background: 'rgba(10,35,66,.6)', borderLeft: '4px solid #C2B280' }}>
                 <div style={{ fontSize: 22, fontWeight: 'bold' }}>
@@ -188,6 +194,7 @@ function App() {
                 </div>
                 <div style={{ marginTop: 8, color: '#a0b0c0', display: 'flex', flexWrap: 'wrap', gap: 18 }}>
                   <div><strong>Source:</strong> {source}</div>
+                  <div><strong>Signal:</strong> {signalLabel}</div>
                   <div><strong>Posted:</strong> {freshness.age}</div>
                   <div><strong>Status:</strong> {freshness.icon} {freshness.label}</div>
                 </div>

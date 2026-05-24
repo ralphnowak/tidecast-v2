@@ -56,6 +56,19 @@ function scoreRecency(date) {
   if (ageHours <= 24) return 40;
   return 24;
 }
+function scoreReportSignal(report) {
+  if (report.signalType === 'reference-spot') return 35;
+
+  const action = ACTION_SCORE[report.action] || 60;
+  const recency = scoreRecency(report.date);
+  return Math.round(action * 0.55 + recency * 0.45);
+}
+function scoreSpotFit(report) {
+  const action = ACTION_SCORE[report.action] || 60;
+  const sourceConfidence = report.sourceConfidence || 65;
+  const structureBoost = report.signalType === 'reference-spot' ? 8 : 0;
+  return clamp(Math.round(action * 0.5 + sourceConfidence * 0.35 + seasonalScore(report.species) * 0.15 + structureBoost), 1, 100);
+}
 function seasonalScore(species, now = new Date()) {
   const priority = SEASONAL_PRIORITY_BY_MONTH[now.getMonth()] || [];
   const index = priority.indexOf(species);
@@ -116,17 +129,38 @@ export function buildFishingIntelligence({ reports = [], forecast, currentZone, 
   const windDirection = forecast?.conditions?.windDirection || 'Variable';
   const wind = scoreWind(windMph);
   const weather = scoreWeather(forecast?.conditions?.shortForecast);
-  const reportDensity = clamp(45 + reports.length * 6, 45, 95);
+  const liveConditions = Math.round(wind * 0.55 + weather * 0.45);
+  const currentReportCount = reports.filter((report) => report.isCurrentReport).length;
+  const reportDensity = clamp(38 + currentReportCount * 9, 38, 86);
   const bestWindow = getBestWindow(forecast?.forecast || []);
   const primeWindows = getPrimeWindows(bestWindow, wind);
 
   const rankedReports = reports.map((report) => {
-    const action = ACTION_SCORE[report.action] || 60;
-    const recency = scoreRecency(report.date);
     const seasonal = seasonalScore(report.species);
+    const spotFit = scoreSpotFit(report);
+    const reportSignal = scoreReportSignal(report);
+    const sourceConfidence = report.sourceConfidence || 65;
     const zoneMatch = report.zone === currentZone?.id ? 100 : 62;
-    const score = Math.round(action * 0.28 + recency * 0.18 + weather * 0.16 + wind * 0.14 + seasonal * 0.14 + zoneMatch * 0.10);
-    return { ...report, biteScore: clamp(score, 1, 100), confidence: clamp(Math.round(score * 0.72 + reportDensity * 0.28), 1, 100) };
+    const score = Math.round(
+      liveConditions * 0.35
+      + seasonal * 0.25
+      + spotFit * 0.20
+      + reportSignal * 0.15
+      + sourceConfidence * 0.05
+    );
+    const conservativePenalty = report.signalType === 'reference-spot' ? 10 : 0;
+    const biteScore = clamp(Math.round(score * 0.9 + zoneMatch * 0.1), 1, 100);
+    const cappedBiteScore = report.signalType === 'reference-spot'
+      ? Math.min(biteScore, 78)
+      : biteScore;
+    return {
+      ...report,
+      biteScore: cappedBiteScore,
+      confidence: clamp(Math.round(score * 0.64 + reportDensity * 0.26 + sourceConfidence * 0.10 - conservativePenalty), 1, 100),
+      signalScore: reportSignal,
+      spotFitScore: spotFit,
+      liveConditionScore: liveConditions,
+    };
   }).sort((a, b) => b.biteScore - a.biteScore || b.confidence - a.confidence);
 
   const best = rankedReports[0];
@@ -139,6 +173,7 @@ export function buildFishingIntelligence({ reports = [], forecast, currentZone, 
     biteScore: report.biteScore,
     confidence: report.confidence,
     location: report.location,
+    signalLabel: report.signalLabel,
   }));
 
   return {
@@ -150,9 +185,9 @@ export function buildFishingIntelligence({ reports = [], forecast, currentZone, 
     confidence: best?.confidence || 0,
     bestWindow,
     rationale: best ? [
-      `${best.action || 'Recent'} ${best.species} reports near ${best.location}.`,
+      `${best.signalLabel || 'Regional signal'} for ${best.species} near ${best.location}.`,
       describeWind(windMph, windDirection),
-      `${best.technique} is the recommended starting pattern.`,
+      `${best.technique} is the recommended starting pattern; confidence stays conservative without a verified same-day report.`,
     ] : ['No live reports are available for this zone yet.'],
   };
 }

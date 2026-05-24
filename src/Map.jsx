@@ -45,6 +45,7 @@ export default function Map({ region, zone, reports, visibleSpecies, setVisibleS
           <p style="margin: 4px 0;"><strong>Zone:</strong> ${report.zone}</p>
           <p style="margin: 4px 0;"><strong>Technique:</strong> ${report.technique}</p>
           <p style="margin: 4px 0;"><strong>Action:</strong> ${report.action}</p>
+          <p style="margin: 4px 0;"><strong>Signal:</strong> ${report.signalLabel || 'Regional Signal'}</p>
           <p style="margin: 4px 0;"><strong>Source:</strong> ${report.source || 'Regional Report'}</p>
         </div>`);
       markersRef.current.push(marker);

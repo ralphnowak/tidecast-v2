@@ -2,10 +2,32 @@ import { getReportCoordinates } from '../shared/geo.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+function getSignalMeta(report) {
+  if (report.source === 'FishTalk Magazine') {
+    return {
+      signalType: 'reference-spot',
+      signalLabel: 'Reference Spot',
+      sourceConfidence: 78,
+      isCurrentReport: false,
+      isReference: true,
+      expiresAt: null,
+    };
+  }
+
+  return {
+    signalType: 'recent-report',
+    signalLabel: 'Recent Report',
+    sourceConfidence: 82,
+    isCurrentReport: true,
+    isReference: false,
+    expiresAt: new Date(Date.now() + (7 * DAY_MS)).toISOString(),
+  };
+}
+
 function getReportDate(report, index) {
   const ageDays = report.source === 'FishTalk Magazine'
-    ? 3 + (index * 1.75)
-    : 0.75 + (index * 0.5);
+    ? 14 + (index * 5)
+    : 0.25 + (index * 0.5);
   return new Date(Date.now() - (ageDays * DAY_MS)).toISOString();
 }
 
@@ -132,6 +154,7 @@ export default async function handler(req, res) {
     }
     regionReports = regionReports.map((report, index) => ({
       ...report,
+      ...getSignalMeta(report),
       date: getReportDate(report, index),
       coords: getReportCoordinates(report, region, zone, index),
     }));
@@ -142,7 +165,7 @@ export default async function handler(req, res) {
       zone: zone || 'all',
       reports: regionReports,
       total: regionReports.length,
-      source: 'Maryland Department of Natural Resources',
+      source: 'Composite regional intelligence',
       fetchedAt: new Date().toISOString(),
     });
   } catch (error) {
