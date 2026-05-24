@@ -137,7 +137,7 @@ export const LOCATION_COORDS = {
   'Middle Bay Channels': [38.64, -76.31],
   'Middle Bay Shallows': [38.68, -76.23],
   'Thimble Shoal Light': [37.01, -76.24],
-  'Point Lookout': [37.57, -76.31],
+  'Point Lookout': [38.04, -76.32],
   'Hooper Island Light': [38.26, -76.25],
   'Practice Target Ship': [38.04, -76.16],
   'Lower Bay Open Water': [37.78, -76.1],
