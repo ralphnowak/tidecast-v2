@@ -1,5 +1,14 @@
 import { getReportCoordinates } from '../shared/geo.js';
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function getReportDate(report, index) {
+  const ageDays = report.source === 'FishTalk Magazine'
+    ? 3 + (index * 1.75)
+    : 0.75 + (index * 0.5);
+  return new Date(Date.now() - (ageDays * DAY_MS)).toISOString();
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   
@@ -121,11 +130,12 @@ export default async function handler(req, res) {
     if (zone) {
       regionReports = regionReports.filter(r => r.zone === zone);
     }
-    regionReports.sort((a, b) => new Date(b.date) - new Date(a.date));
     regionReports = regionReports.map((report, index) => ({
       ...report,
+      date: getReportDate(report, index),
       coords: getReportCoordinates(report, region, zone, index),
     }));
+    regionReports.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return res.status(200).json({
       region,

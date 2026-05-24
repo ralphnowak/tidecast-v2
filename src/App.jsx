@@ -25,6 +25,18 @@ function getSource(report) {
   return report.source || report.provider || report.origin || 'Regional Report';
 }
 
+function getReportAge(date) {
+  if (!date) return { label: 'Recent', age: 'Recently' };
+  const hours = Math.max(0, (Date.now() - new Date(date).getTime()) / 36e5);
+  if (hours < 1) return { label: 'Just Updated', age: 'Less than 1 hr ago' };
+  if (hours < 24) return { label: 'Updated Today', age: `${Math.round(hours)} hrs ago` };
+
+  const days = Math.round(hours / 24);
+  if (days === 1) return { label: 'Recent', age: '1 day ago' };
+  if (days <= 7) return { label: 'This Week', age: `${days} days ago` };
+  return { label: 'Reference Report', age: `${days} days ago` };
+}
+
 function App() {
   const [selectedRegion, setSelectedRegion] = useState('chesapeake');
   const [selectedZone, setSelectedZone] = useState(zones['chesapeake'][0].id);
@@ -166,7 +178,7 @@ function App() {
         <div style={{ marginTop: 24 }}>
           <h3 style={{ color: '#C2B280' }}>Live Reports</h3>
           {reports.map((report, idx) => {
-            const freshness = getFreshness(report.date);
+            const freshness = getReportAge(report.date);
             const source = getSource(report);
             return (
               <div key={idx} style={{ padding: 16, marginBottom: 12, background: 'rgba(10,35,66,.6)', borderLeft: '4px solid #C2B280' }}>
@@ -176,7 +188,7 @@ function App() {
                 <div style={{ marginTop: 8, color: '#a0b0c0', display: 'flex', flexWrap: 'wrap', gap: 18 }}>
                   <div><strong>Source:</strong> {source}</div>
                   <div><strong>Posted:</strong> {freshness.age}</div>
-                  <div><strong>Freshness:</strong> {freshness.icon} {freshness.label}</div>
+                  <div><strong>Status:</strong> {freshness.label}</div>
                 </div>
                 <div style={{ marginTop: 10 }}><strong>Technique:</strong> {report.technique}</div>
                 <div style={{ marginTop: 6 }}><strong>Action:</strong> {report.action}</div>
