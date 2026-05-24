@@ -1,4 +1,4 @@
-import { getLocationCoordinates } from '../shared/geo.js';
+import { getReportCoordinates } from '../shared/geo.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -77,13 +77,13 @@ export default async function handler(req, res) {
       { species: 'Crappie', location: 'Middle Potomac Coves', zone: 'middle-potomac', date: new Date(Date.now() - 12600000).toISOString(), technique: 'Small jigs', weight: '0.5-1.5 lbs', action: 'Good', source: 'Maryland DNR' },
 
       // LOWER POTOMAC - Saline
-      { species: 'Striped Bass', location: 'Occoquan', zone: 'lower-potomac', date: new Date().toISOString(), technique: 'Topwater at dawn', weight: '14-24 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Largemouth Bass', location: 'Pohick Bay', zone: 'lower-potomac', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Spinnerbaits, soft plastics', weight: '2-5 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Snakehead', location: 'Lower Potomac Backwater', zone: 'lower-potomac', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Topwater, live mullet', weight: '3-6 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Flathead Catfish', location: 'Lower Potomac Deep', zone: 'lower-potomac', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Live shad at night', weight: '25-60 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Black Drum', location: 'Lower Potomac Structure', zone: 'lower-potomac', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Live crabs', weight: '30-50 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Cobia', location: 'Lower Potomac Open Water', zone: 'lower-potomac', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Live mullet', weight: '20-40 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Spanish Mackerel', location: 'Lower Potomac Channel', zone: 'lower-potomac', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small spoons', weight: '1-3 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Striped Bass', location: 'Colonial Beach Channel', zone: 'lower-potomac', date: new Date().toISOString(), technique: 'Topwater at dawn', weight: '14-24 lbs', action: 'Very Good', source: 'Maryland DNR' },
+      { species: 'Largemouth Bass', location: 'St. Clements Bay', zone: 'lower-potomac', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Spinnerbaits, soft plastics', weight: '2-5 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Snakehead', location: 'Tall Timbers', zone: 'lower-potomac', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Topwater, live mullet', weight: '3-6 lbs', action: 'Excellent', source: 'Maryland DNR' },
+      { species: 'Flathead Catfish', location: 'Lower Potomac Mainstem', zone: 'lower-potomac', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Live shad at night', weight: '25-60 lbs', action: 'Excellent', source: 'Maryland DNR' },
+      { species: 'Black Drum', location: 'Piney Point', zone: 'lower-potomac', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Live crabs', weight: '30-50 lbs', action: 'Very Good', source: 'Maryland DNR' },
+      { species: 'Cobia', location: 'St. George Island', zone: 'lower-potomac', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Live mullet', weight: '20-40 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Spanish Mackerel', location: 'Lower Potomac Shoals', zone: 'lower-potomac', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small spoons', weight: '1-3 lbs', action: 'Good', source: 'Maryland DNR' },
     ],
 
     paxriver: [
@@ -120,9 +120,9 @@ export default async function handler(req, res) {
       regionReports = regionReports.filter(r => r.zone === zone);
     }
     regionReports.sort((a, b) => new Date(b.date) - new Date(a.date));
-    regionReports = regionReports.map(report => ({
+    regionReports = regionReports.map((report, index) => ({
       ...report,
-      coords: getLocationCoordinates(report.location),
+      coords: getReportCoordinates(report, region, zone, index),
     }));
 
     return res.status(200).json({
