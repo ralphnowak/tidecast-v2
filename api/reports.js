@@ -34,17 +34,17 @@ export default async function handler(req, res) {
       { species: 'Carp', location: 'Middle Bay Shallows', zone: 'middle-bay', date: new Date(Date.now() - 16200000).toISOString(), technique: 'Corn, dough balls', weight: '10-30 lbs', action: 'Good', source: 'Maryland DNR' },
 
       // LOWER BAY - Saltier, game fish dominated
-      { species: 'Striped Bass', location: 'Thimble Shoal Light', zone: 'lower-bay', date: new Date().toISOString(), technique: 'Topwater, jigging', weight: '16-28 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Red Drum', location: 'Point Lookout', zone: 'lower-bay', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Live mullet/crabs', weight: '15-40 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Cobia', location: 'Hooper Island Light', zone: 'lower-bay', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Live mullet, structure', weight: '25-50 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Bluefish', location: 'Practice Target Ship', zone: 'lower-bay', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Metal shad, topwater', weight: '6-14 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Spanish Mackerel', location: 'Lower Bay Open Water', zone: 'lower-bay', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Small spoons, speed jigging', weight: '1-3 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Kingfish', location: 'Lower Bay Shelf', zone: 'lower-bay', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Live baitfish, spoons', weight: '3-8 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Speckled Sea Trout', location: 'Lower Bay Grass', zone: 'lower-bay', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small shad, topwater', weight: '1-2 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Black Drum', location: 'Point Lookout Deep', zone: 'lower-bay', date: new Date(Date.now() - 12600000).toISOString(), technique: 'Live blue crabs', weight: '35-55 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Flounder', location: 'Lower Bay Sandy Bottom', zone: 'lower-bay', date: new Date(Date.now() - 14400000).toISOString(), technique: 'Live minnows, soft plastics', weight: '1-3 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Tautog', location: 'Lower Bay Rocks', zone: 'lower-bay', date: new Date(Date.now() - 16200000).toISOString(), technique: 'Clams, crabs', weight: '1-3 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Catfish', location: 'Lower Bay Deep Areas', zone: 'lower-bay', date: new Date(Date.now() - 18000000).toISOString(), technique: 'Cut shad, chicken liver', weight: '5-15 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Striped Bass', location: 'Point Lookout East Edge', zone: 'lower-bay', date: new Date().toISOString(), technique: 'Jigging and trolling the edge', weight: '16-28 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'Red Drum', location: 'Point Lookout State Park', zone: 'lower-bay', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Live mullet/crabs near pier and point', weight: '15-40 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'Cobia', location: 'Smith Point Ledge', zone: 'lower-bay', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Live eels and bunker chunks', weight: '25-50 lbs', action: 'Excellent', source: 'FishTalk Magazine' },
+      { species: 'Bluefish', location: 'Practice Target Ship', zone: 'lower-bay', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Metal jigs and topwater', weight: '6-14 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'Spanish Mackerel', location: 'Buoy 72A Shoal', zone: 'lower-bay', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Small spoons over shoal edges', weight: '1-3 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'Kingfish', location: 'Tangier Sound Edge', zone: 'lower-bay', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Bottom rigs on the edge', weight: '1-3 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Speckled Sea Trout', location: 'Lake Conoy Jetty', zone: 'lower-bay', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Paddle tails near the jetty', weight: '1-2 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Black Drum', location: 'Point No Point Fish Haven', zone: 'lower-bay', date: new Date(Date.now() - 12600000).toISOString(), technique: 'Crab baits around structure', weight: '35-55 lbs', action: 'Excellent', source: 'FishTalk Magazine' },
+      { species: 'Flounder', location: 'Point Lookout West Edge', zone: 'lower-bay', date: new Date(Date.now() - 14400000).toISOString(), technique: 'Minnows and jigs along drop-off', weight: '1-3 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Tautog', location: 'Hotel Rock', zone: 'lower-bay', date: new Date(Date.now() - 16200000).toISOString(), technique: 'Clams and crabs over rock', weight: '1-3 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Catfish', location: "St. Mary's Oyster Sanctuary", zone: 'lower-bay', date: new Date(Date.now() - 18000000).toISOString(), technique: 'Cut bait near reef structure', weight: '5-15 lbs', action: 'Good', source: 'FishTalk Magazine' },
       { species: 'Sharks', location: 'Lower Bay Offshore', zone: 'lower-bay', date: new Date(Date.now() - 19800000).toISOString(), technique: 'Live mackerel, bunker', weight: '30-100+ lbs', action: 'Seasonal', source: 'Maryland DNR' },
 
       // EASTERN SHORE - Shallow, brackish
@@ -77,13 +77,15 @@ export default async function handler(req, res) {
       { species: 'Crappie', location: 'Middle Potomac Coves', zone: 'middle-potomac', date: new Date(Date.now() - 12600000).toISOString(), technique: 'Small jigs', weight: '0.5-1.5 lbs', action: 'Good', source: 'Maryland DNR' },
 
       // LOWER POTOMAC - Saline
-      { species: 'Striped Bass', location: 'Colonial Beach Channel', zone: 'lower-potomac', date: new Date().toISOString(), technique: 'Topwater at dawn', weight: '14-24 lbs', action: 'Very Good', source: 'Maryland DNR' },
+      { species: 'Striped Bass', location: 'Route 301 Bridge', zone: 'lower-potomac', date: new Date().toISOString(), technique: 'Jigs around pilings', weight: '14-24 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
       { species: 'Largemouth Bass', location: 'St. Clements Bay', zone: 'lower-potomac', date: new Date(Date.now() - 1800000).toISOString(), technique: 'Spinnerbaits, soft plastics', weight: '2-5 lbs', action: 'Good', source: 'Maryland DNR' },
       { species: 'Snakehead', location: 'Tall Timbers', zone: 'lower-potomac', date: new Date(Date.now() - 3600000).toISOString(), technique: 'Topwater, live mullet', weight: '3-6 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Flathead Catfish', location: 'Lower Potomac Mainstem', zone: 'lower-potomac', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Live shad at night', weight: '25-60 lbs', action: 'Excellent', source: 'Maryland DNR' },
-      { species: 'Black Drum', location: 'Piney Point', zone: 'lower-potomac', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Live crabs', weight: '30-50 lbs', action: 'Very Good', source: 'Maryland DNR' },
-      { species: 'Cobia', location: 'St. George Island', zone: 'lower-potomac', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Live mullet', weight: '20-40 lbs', action: 'Good', source: 'Maryland DNR' },
-      { species: 'Spanish Mackerel', location: 'Lower Potomac Shoals', zone: 'lower-potomac', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small spoons', weight: '1-3 lbs', action: 'Good', source: 'Maryland DNR' },
+      { species: 'Flathead Catfish', location: 'Coles Point Tall Timbers Piney Point Triangle', zone: 'lower-potomac', date: new Date(Date.now() - 5400000).toISOString(), technique: 'Chumming and jigging channel edges', weight: '25-60 lbs', action: 'Excellent', source: 'FishTalk Magazine' },
+      { species: 'Black Drum', location: 'Piney Point', zone: 'lower-potomac', date: new Date(Date.now() - 7200000).toISOString(), technique: 'Live crabs', weight: '30-50 lbs', action: 'Very Good', source: 'FishTalk Magazine' },
+      { species: 'Cobia', location: 'St. George Island Edge', zone: 'lower-potomac', date: new Date(Date.now() - 9000000).toISOString(), technique: 'Live bait along the contour', weight: '20-40 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Spanish Mackerel', location: 'Point Lookout Southwest Drop', zone: 'lower-potomac', date: new Date(Date.now() - 10800000).toISOString(), technique: 'Small spoons along drop-off', weight: '1-3 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Bluefish', location: 'Vir-Mar Beach Drop-Off', zone: 'lower-potomac', date: new Date(Date.now() - 12600000).toISOString(), technique: 'Jigging under birds', weight: '2-8 lbs', action: 'Good', source: 'FishTalk Magazine' },
+      { species: 'Cobia', location: 'Smith Point Ledge', zone: 'lower-potomac', date: new Date(Date.now() - 14400000).toISOString(), technique: 'Live eels on ledge', weight: '25-50 lbs', action: 'Good', source: 'FishTalk Magazine' },
     ],
 
     paxriver: [
