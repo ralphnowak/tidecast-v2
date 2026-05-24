@@ -1,3 +1,5 @@
+import { getLocationCoordinates } from '../shared/geo.js';
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   
@@ -118,6 +120,10 @@ export default async function handler(req, res) {
       regionReports = regionReports.filter(r => r.zone === zone);
     }
     regionReports.sort((a, b) => new Date(b.date) - new Date(a.date));
+    regionReports = regionReports.map(report => ({
+      ...report,
+      coords: getLocationCoordinates(report.location),
+    }));
 
     return res.status(200).json({
       region,
